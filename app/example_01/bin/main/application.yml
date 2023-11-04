@@ -1,0 +1,9 @@
+server:
+  port: 9900
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/LeastKIds/spring_cloud_gateway_config.git
