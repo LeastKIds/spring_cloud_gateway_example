@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+!**/src/main/**/out/
+!**/src/test/**/out/
+!**/src/main/**/bin/
+!**/src/test/**/bin/

@@ -1,7 +1,25 @@
 *build*
 *.vscode*
-!**/build.gradle
+*bin/*
+*.gradle*
+*.apt_generated
+*.classpath
+*.factorypath
+*.project
+*.settings
+*.springBeans
+*.sts4-cache
+*.idea
+*.iws
+*.iml
+*.ipr
+*out/
 
-!gradle/wrapper/gradle-wrapper.jar
+!**/build.gradle
+!*gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+
+!**/src/main/**/bin/
+!**/src/test/**/bin/
