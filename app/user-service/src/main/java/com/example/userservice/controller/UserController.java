@@ -1,5 +1,8 @@
 package com.example.userservice.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.Greeting;
 import com.example.userservice.vo.RequestUser;
@@ -21,7 +25,7 @@ import com.example.userservice.vo.ResponseUser;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user-service")
 public class UserController {
     
     private Environment env;
@@ -36,12 +40,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user-service/heath_check")
+    @GetMapping("/heath_check")
     public String status() {
         return String.format("It's Working in User Service on PORT %s", env.getProperty("local.server.port"));
     }
 
-    @GetMapping("/heath_check/welcome")
+    @GetMapping("/welcome")
     public String welcome() {
         // return env.getProperty("greeting.message");
         return greeting.getMessage();
@@ -58,5 +62,19 @@ public class UserController {
         ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser> > getUsers() {
+        Iterable<UserEntity> userList = userService.getUserByAll();
+
+        List<ResponseUser> result = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+        userList.forEach(v -> {
+            result.add(modelMapper.map(v, ResponseUser.class));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
