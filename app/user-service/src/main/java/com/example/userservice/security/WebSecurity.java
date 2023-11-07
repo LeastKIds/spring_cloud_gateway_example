@@ -28,8 +28,10 @@ public class WebSecurity{
             .authorizeHttpRequests((auth) ->
                 auth
                     .requestMatchers(
-                        AntPathRequestMatcher.antMatcher("/users/**"),
-                        AntPathRequestMatcher.antMatcher("/h2-console/**")
+                        new AntPathRequestMatcher("/users/**"),
+                        new AntPathRequestMatcher("/h2-console/**"),
+                        new AntPathRequestMatcher("/heath_check/**"),
+                        new AntPathRequestMatcher("/user-service/**")
                         )
                     .permitAll()
                     .anyRequest()
@@ -59,7 +61,7 @@ public class WebSecurity{
     public CorsConfigurationSource securityCorsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("/**"));
+        config.setAllowedOrigins(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowCredentials(true);
 
