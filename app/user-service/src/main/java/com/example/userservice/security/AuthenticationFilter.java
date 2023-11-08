@@ -50,5 +50,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // TODO Auto-generated method stub
         super.successfulAuthentication(request, response, chain, authResult);
     }
+
+    public void setAuthenticationManager() {
+    }
     
 }
