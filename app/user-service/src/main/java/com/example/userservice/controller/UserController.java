@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,26 +21,26 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.Greeting;
+import com.example.userservice.vo.RequestLogin;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/user-service")
+@AllArgsConstructor
+@RequestMapping("/")
 public class UserController {
     
     private Environment env;
     private UserService userService;
     
+    
+    
     @Autowired
     private Greeting greeting;
 
-    @Autowired
-    public UserController(Environment env, UserService userService) {
-        this.env = env;
-        this.userService = userService;
-    }
 
     @GetMapping("/heath_check")
     public String status() {
@@ -76,5 +78,21 @@ public class UserController {
         });
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseUser> login(@Valid @RequestBody RequestLogin user) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+            modelMapper.map(
+                userService.getUserByEmail(userDto), 
+                ResponseUser.class
+            )
+        );
+
     }
 }
