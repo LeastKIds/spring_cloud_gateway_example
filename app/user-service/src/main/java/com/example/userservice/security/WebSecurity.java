@@ -31,8 +31,10 @@ import lombok.AllArgsConstructor;
 public class WebSecurity{
 
 
+    // 허용할 IP를 스태틱 변수로 설정
     public static final String ALLOWED_IP_ADDRESS = "172.17.0.1";
     public static final IpAddressMatcher ALLOWED_IP_ADDRESS_MATCHER = new IpAddressMatcher(ALLOWED_IP_ADDRESS);
+
 
     private final AuthenticationManager authenticationManager;
     
@@ -43,14 +45,15 @@ public class WebSecurity{
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((auth) ->
                 auth
+                    // requestMatchers("/** ") 으로 할시 default setting은 AntPathRequestMatcher로 설정됨.
                     .requestMatchers(
                         // new AntPathRequestMatcher("/users/**"),
                         // new AntPathRequestMatcher("/h2-console/**"),
                         // new AntPathRequestMatcher("/heath_check/**"),
                         // new AntPathRequestMatcher("/user-service/**")
-                        new AntPathRequestMatcher("/**")
+                        new AntPathRequestMatcher("/**")  
                         )
-                        .access(this::hasIpAddress)
+                        .access(this::hasIpAddress)     // 최신 버전의 hasIpAddress 설정법
                     // .permitAll()
                     // .anyRequest()
                     // .authenticated() 
@@ -63,7 +66,10 @@ public class WebSecurity{
             .build();
     }
     
-
+    // 새로운 authenticationManager 설정법
+    // 원래는 WebSecurityConfigurerAdapter를 상속받아 그냥 사용할 수 있었지만 
+    // 현재는 WebSecurityConfigurerAdapter 을 상속받아 사용하는것을 권하지 않기 때문에
+    // 위에서 private final AuthenticationManager authenticationManager;을 해 줘야 한다.
     private AuthenticationFilter getAuthenticationFilter() throws Exception{
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
         authenticationFilter.setAuthenticationManager(authenticationManager);
@@ -71,6 +77,7 @@ public class WebSecurity{
         return authenticationFilter;
     }
 
+    // hasIpAddress 설정법
     private AuthorizationDecision hasIpAddress(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         return new AuthorizationDecision(ALLOWED_IP_ADDRESS_MATCHER.matches(object.getRequest()));
     }
