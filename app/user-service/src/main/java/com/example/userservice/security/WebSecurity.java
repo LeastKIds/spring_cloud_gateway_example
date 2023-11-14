@@ -82,17 +82,6 @@ public class WebSecurity{
                 .build();
     }
     
-    // // 새로운 authenticationManager 설정법
-    // // 원래는 WebSecurityConfigurerAdapter를 상속받아 그냥 사용할 수 있었지만 
-    // // 현재는 WebSecurityConfigurerAdapter 을 상속받아 사용하는것을 권하지 않기 때문에
-    // // 위에서 private final AuthenticationManager authenticationManager;을 해 줘야 한다.
-    // private AuthenticationFilter getAuthenticationFilter() throws Exception{
-    //     AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-    //     authenticationFilter.setAuthenticationManager(authenticationManager);
-
-    //     return authenticationFilter;
-    // }
-
     // hasIpAddress 설정법
     private AuthorizationDecision hasIpAddress(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         return new AuthorizationDecision(ALLOWED_IP_ADDRESS_MATCHER.matches(object.getRequest()));

@@ -25,6 +25,7 @@ import com.example.userservice.vo.RequestLogin;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -81,7 +82,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseUser> login(@Valid @RequestBody RequestLogin user) {
+    public ResponseEntity<ResponseUser> login(@Valid @RequestBody RequestLogin user, HttpServletResponse response) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -89,7 +90,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(
             modelMapper.map(
-                userService.getUserByEmail(userDto), 
+                userService.getUserByEmail(userDto, response), 
                 ResponseUser.class
             )
         );

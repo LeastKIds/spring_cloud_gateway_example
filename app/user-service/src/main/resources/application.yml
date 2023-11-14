@@ -36,3 +36,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+token:
+  expriation_time: 86400000
+  secret: leastkids@gmail.com
